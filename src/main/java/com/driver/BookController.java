@@ -35,9 +35,9 @@ public class BookController {
         this.id = id;
     }
 
-    public BookController(){
-        this.bookList = new ArrayList<Book>();
-        this.id = 1;
+    public BookController() {
+        this.bookList = new ArrayList<Book>() ;
+        this.id = 1 ;
     }
 
 
@@ -58,15 +58,15 @@ public class BookController {
     // pass id as path variable
     // getBookById()
     @GetMapping("/get-book-by-id/{id}")
-    public ResponseEntity getBookById ( @PathVariable("id") String bookid){
+    public ResponseEntity<Book> getBookById ( @PathVariable("id") String bookid){
         int id = Integer.parseInt(bookid) ;
         for ( int i = 0 ; i < bookList.size() ; i++ ){
             Book book = bookList.get(i) ;
             if ( book.getId() == id ){
-                return new ResponseEntity( book , HttpStatus.FOUND) ;
+                return new ResponseEntity<>( book , HttpStatus.FOUND) ;
             }
         }
-        return new ResponseEntity( null , HttpStatus.FOUND) ;
+        return new ResponseEntity<>( null , HttpStatus.FOUND) ;
     }
 
 
@@ -74,33 +74,33 @@ public class BookController {
     // pass id as path variable
     // deleteBookById()
     @DeleteMapping("/delete-book-by-id/{id}")
-    public ResponseEntity deleteBookById ( @PathVariable("id") String bookid){
+    public ResponseEntity<String> deleteBookById ( @PathVariable("id") String bookid){
         int id = Integer.parseInt(bookid) ;
         for ( int i = 0 ; i < bookList.size() ; i++ ){
             Book book = bookList.get(i) ;
             if ( book.getId() == id ){
                 bookList.remove(i) ;
-                return new ResponseEntity( "Deleted Successfully" , HttpStatus.OK) ;
+                return new ResponseEntity<>( "Deleted Successfully" , HttpStatus.OK) ;
             }
         }
-        return new ResponseEntity( "Not found" , HttpStatus.NOT_FOUND) ;
+        return new ResponseEntity<>( "Not found" , HttpStatus.NOT_FOUND) ;
     }
 
 
     // get request /get-all-books
     // getAllBooks()
     @GetMapping("/get-all-books")
-    public ResponseEntity getAllBooks (){
-        return new ResponseEntity( getBookList() , HttpStatus.FOUND) ;
+    public ResponseEntity<List<Book>> getAllBooks (){
+        return new ResponseEntity<>( getBookList() , HttpStatus.FOUND) ;
     }
 
 
     // delete request /delete-all-books
     // deleteAllBooks()
     @DeleteMapping("/delete-all-books")
-    public ResponseEntity deleteAllBooks (){
+    public ResponseEntity<String> deleteAllBooks (){
         bookList.clear() ;
-        return new ResponseEntity( "Deleted Successfully" , HttpStatus.FOUND) ;
+        return new ResponseEntity<>( "Deleted Successfully" , HttpStatus.FOUND) ;
     }
 
 
@@ -108,28 +108,28 @@ public class BookController {
     // pass author name as request param
     // getBooksByAuthor()
     @GetMapping("/get-books-by-author")
-    public ResponseEntity getBooksByAuthor ( @RequestParam("author") String name ){
-        ArrayList < Book > aut = new ArrayList<>() ;
+    public ResponseEntity<List<Book>> getBooksByAuthor ( @RequestParam("author") String name ){
+        List < Book > aut = new ArrayList<>() ;
         for ( int i = 0 ; i < bookList.size() ; i++ ){
             if ( bookList.get(i).getAuthor().equals(name)){
                 aut.add(bookList.get(i));
             }
         }
-        return new ResponseEntity( aut , HttpStatus.FOUND) ;
+        return new ResponseEntity<>( aut , HttpStatus.FOUND) ;
     }
 
     // get request /get-books-by-genre
     // pass genre name as request param
     // getBooksByGenre()
     @GetMapping("/get-books-by-genre")
-    public ResponseEntity getBooksByGenre ( @RequestParam("author") String name ){
-        ArrayList < Book > aut = new ArrayList<>() ;
+    public ResponseEntity<List<Book>> getBooksByGenre ( @RequestParam("author") String name ){
+        List < Book > aut = new ArrayList<>() ;
         for ( int i = 0 ; i < bookList.size() ; i++ ){
             if ( bookList.get(i).getGenre().equals(name)){
                 aut.add(bookList.get(i));
             }
         }
-        return new ResponseEntity( aut , HttpStatus.FOUND) ;
+        return new ResponseEntity<>( aut , HttpStatus.FOUND) ;
     }
 }
 
