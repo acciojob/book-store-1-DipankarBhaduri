@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("books")
 public class BookController {
@@ -46,7 +45,11 @@ public class BookController {
     // pass book as request body
     @PostMapping("/create-book")
     public ResponseEntity<Book> createBook(@RequestBody Book book){
+        BookController bc = new BookController() ;
+        book.setId(getId());
         bookList.add(book);
+        setBookList(bookList);
+        this.setId(id++);
         return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
 
@@ -56,14 +59,13 @@ public class BookController {
     // getBookById()
     @GetMapping("/get-book-by-id/{id}")
     public ResponseEntity getBookById ( @PathVariable("id") int id){
-        Book result = null ;
         for ( int i = 0 ; i < bookList.size() ; i++ ){
             Book book = bookList.get(i) ;
             if ( book.getId() == id ){
-                result = book ;
+                return new ResponseEntity( book , HttpStatus.FOUND) ;
             }
         }
-        return new ResponseEntity( result , HttpStatus.FOUND) ;
+        return new ResponseEntity( null , HttpStatus.FOUND) ;
     }
 
 
@@ -76,10 +78,10 @@ public class BookController {
             Book book = bookList.get(i) ;
             if ( book.getId() == id ){
                 bookList.remove(i) ;
-                break ;
+                return new ResponseEntity( "Deleted Successfully" , HttpStatus.OK) ;
             }
         }
-        return new ResponseEntity( "Deleted Successfully" , HttpStatus.FOUND) ;
+        return new ResponseEntity( "Not found" , HttpStatus.NOT_FOUND) ;
     }
 
 
@@ -87,7 +89,7 @@ public class BookController {
     // getAllBooks()
     @GetMapping("/get-all-books")
     public ResponseEntity getAllBooks (){
-        return new ResponseEntity( bookList , HttpStatus.FOUND) ;
+        return new ResponseEntity( getBookList() , HttpStatus.FOUND) ;
     }
 
 
@@ -95,7 +97,7 @@ public class BookController {
     // deleteAllBooks()
     @DeleteMapping("/delete-all-books")
     public ResponseEntity deleteAllBooks (){
-        bookList = new ArrayList<>() ;
+        bookList.clear() ;
         return new ResponseEntity( "Deleted Successfully" , HttpStatus.FOUND) ;
     }
 
